@@ -48,7 +48,8 @@ class GameScreenLayoutManager @JvmOverloads constructor(
     var isAdjustModeEnabled = false
         set(value) {
             field = value
-            setBackgroundColor(if (value) Color.argb(30, 0, 0, 0) else Color.TRANSPARENT)
+            // 使用非常透明的背景
+            setBackgroundColor(if (value) Color.argb(10, 0, 0, 0) else Color.TRANSPARENT)
             invalidate()
         }
     
@@ -75,24 +76,24 @@ class GameScreenLayoutManager @JvmOverloads constructor(
     private var lastX = 0f
     private var lastY = 0f
     
-    // 手柄绘制
+    // 手柄绘制 - 使用更透明的样式
     private val handlePaint = Paint().apply {
-        color = Color.argb(220, 33, 150, 243) // Material Blue
+        color = Color.argb(100, 33, 150, 243) // 非常透明
         style = Paint.Style.FILL
         isAntiAlias = true
     }
     
     private val handleStrokePaint = Paint().apply {
-        color = Color.WHITE
+        color = Color.argb(150, 255, 255, 255) // 半透明白色
         style = Paint.Style.STROKE
         strokeWidth = 2f
         isAntiAlias = true
     }
     
     private val edgePaint = Paint().apply {
-        color = Color.argb(180, 33, 150, 243)
+        color = Color.argb(80, 33, 150, 243) // 非常透明的蓝色边框
         style = Paint.Style.STROKE
-        strokeWidth = 3f
+        strokeWidth = 2f
         isAntiAlias = true
     }
     

@@ -94,6 +94,7 @@ import org.yuzu.yuzu_emu.utils.GpuDriverHelper
 import org.yuzu.yuzu_emu.utils.Log
 import org.yuzu.yuzu_emu.utils.NativeConfig
 import org.yuzu.yuzu_emu.utils.NativeFreedrenoConfig
+import org.yuzu.yuzu_emu.utils.ScreenLayoutManager
 import org.yuzu.yuzu_emu.utils.ViewUtils
 import org.yuzu.yuzu_emu.utils.ViewUtils.setVisible
 import org.yuzu.yuzu_emu.utils.collect
@@ -857,7 +858,9 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
                 }
 
                 R.id.menu_screen_layout -> {
-                    ScreenLayoutAdjustDialog().show(
+                    val dialog = ScreenLayoutAdjustDialog()
+                    dialog.setLayoutManager(binding.gameScreenLayoutManager)
+                    dialog.show(
                         childFragmentManager,
                         "ScreenLayoutAdjustDialog"
                     )
@@ -1038,6 +1041,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
                 }
 
                 updateScreenLayout()
+                loadScreenLayoutSettings()
 
                 emulationState.run(emulationActivity!!.isActivityRecreated)
             }
@@ -1051,6 +1055,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
         val b = _binding ?: return
 
         updateScreenLayout()
+        loadScreenLayoutSettings()
         val showInputOverlay = BooleanSetting.SHOW_INPUT_OVERLAY.getBoolean()
         if (emulationActivity?.isInPictureInPictureMode == true) {
             if (b.drawerLayout.isOpen) {
@@ -1803,6 +1808,29 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
         }
         emulationActivity?.buildPictureInPictureParams()
         updateOrientation()
+    }
+
+    /**
+     * 加载并应用保存的屏幕布局设置
+     */
+    private fun loadScreenLayoutSettings() {
+        val b = _binding ?: return
+        try {
+            val config = ScreenLayoutManager.loadLayoutConfig(requireContext())
+            if (config.enabled) {
+                b.gameScreenLayoutManager.loadLayoutConfig(
+                    GameScreenLayoutManager.LayoutMargins(
+                        config.left,
+                        config.top,
+                        config.right,
+                        config.bottom
+                    )
+                )
+                b.gameScreenLayoutManager.isAdjustModeEnabled = true
+            }
+        } catch (e: Exception) {
+            // 忽略错误，使用默认设置
+        }
     }
 
     private fun updateFoldableLayout(
