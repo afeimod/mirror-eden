@@ -86,11 +86,6 @@ class ScreenLayoutAdjustDialog : DialogFragment() {
         onShowListener?.invoke()
     }
     
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-    
     private fun setupUI() {
         // 启用/禁用调整模式开关
         binding.switchEnableResize.setOnCheckedChangeListener { _, isChecked ->
