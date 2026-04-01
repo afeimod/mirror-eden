@@ -50,6 +50,11 @@
         android:title="@string/emulation_input_overlay" />
 
     <item
+        android:id="@+id/menu_screen_layout"
+        android:icon="@drawable/ic_aspect_ratio"
+        android:title="@string/screen_layout_adjust" />
+
+    <item
         android:id="@+id/menu_lock_drawer"
         android:icon="@drawable/ic_unlock"
         android:title="@string/emulation_input_overlay" />

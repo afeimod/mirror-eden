@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SPDX-FileCopyrightText: Copyright 2026 Eden Emulator Project
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- 启用布局调整开关 -->
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/switch_enable_resize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/enable_screen_layout_adjust"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        android:layout_marginBottom="16dp" />
+
+    <!-- 调整模式提示 -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text_resize_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/resize_mode_hint"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="?android:textColorSecondary"
+        android:layout_marginBottom="24dp"
+        android:visibility="gone" />
+
+    <!-- 边距调整 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/edge_margins"
+        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+        android:layout_marginBottom="8dp" />
+
+    <!-- 左边距 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="@string/edge_left"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider_left_margin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:valueFrom="0"
+            android:valueTo="300"
+            android:stepSize="5"
+            android:value="0" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_left_value"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="0dp"
+            android:textAlignment="textEnd"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
+
+    </LinearLayout>
+
+    <!-- 上边距 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="@string/edge_top"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider_top_margin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:valueFrom="0"
+            android:valueTo="300"
+            android:stepSize="5"
+            android:value="0" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_top_value"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="0dp"
+            android:textAlignment="textEnd"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
+
+    </LinearLayout>
+
+    <!-- 右边距 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="@string/edge_right"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider_right_margin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:valueFrom="0"
+            android:valueTo="300"
+            android:stepSize="5"
+            android:value="0" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_right_value"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="0dp"
+            android:textAlignment="textEnd"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
+
+    </LinearLayout>
+
+    <!-- 下边距 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="24dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="@string/edge_bottom"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider_bottom_margin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:valueFrom="0"
+            android:valueTo="300"
+            android:stepSize="5"
+            android:value="0" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/text_bottom_value"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="0dp"
+            android:textAlignment="textEnd"
+            android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
+
+    </LinearLayout>
+
+    <!-- 快速预设 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/quick_presets"
+        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+        android:layout_marginBottom="8dp" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group_presets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_default"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/preset_default" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_compact"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/preset_compact" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_widescreen"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/preset_widescreen" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_fullscreen"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/preset_fullscreen" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- 操作按钮 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_reset"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reset" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@android:string/ok" />
+
+    </LinearLayout>
+
+</LinearLayout>

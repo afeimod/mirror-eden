@@ -72,6 +72,7 @@ import org.yuzu.yuzu_emu.activities.EmulationActivity
 import org.yuzu.yuzu_emu.databinding.DialogOverlayAdjustBinding
 import org.yuzu.yuzu_emu.databinding.FragmentEmulationBinding
 import org.yuzu.yuzu_emu.dialogs.QuickSettings
+import org.yuzu.yuzu_emu.dialogs.ScreenLayoutAdjustDialog
 import org.yuzu.yuzu_emu.features.input.NativeInput
 import org.yuzu.yuzu_emu.features.settings.model.BooleanSetting
 import org.yuzu.yuzu_emu.features.settings.model.IntSetting
@@ -851,6 +852,15 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
                     NativeConfig.reloadGlobalConfig()
                     emulationViewModel.setIsEmulationStopping(true)
                     binding.drawerLayout.close()
+                    binding.inGameMenu.requestFocus()
+                    true
+                }
+
+                R.id.menu_adjust_layout -> {
+                    ScreenLayoutAdjustDialog().show(
+                        childFragmentManager,
+                        "ScreenLayoutAdjustDialog"
+                    )
                     binding.inGameMenu.requestFocus()
                     true
                 }

@@ -1791,4 +1791,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="external_content">External Content</string>
     <string name="add_folders">Add Folder</string>
 
+    <!-- Screen Layout Adjust -->
+    <string name="screen_layout_adjust">Screen Layout Adjust</string>
+    <string name="enable_screen_layout_adjust">Enable Layout Adjustment</string>
+    <string name="resize_mode_hint">Drag screen edges or corners to resize. Drag center to move position.</string>
+    <string name="edge_margins">Edge Margins</string>
+    <string name="edge_left">Left</string>
+    <string name="edge_top">Top</string>
+    <string name="edge_right">Right</string>
+    <string name="edge_bottom">Bottom</string>
+    <string name="quick_presets">Quick Presets</string>
+    <string name="preset_default">Default</string>
+    <string name="preset_compact">Compact</string>
+    <string name="preset_widescreen">Wide</string>
+    <string name="preset_fullscreen">Full</string>
+    <string name="menu_screen_layout">Screen Layout</string>
+
 </resources>
