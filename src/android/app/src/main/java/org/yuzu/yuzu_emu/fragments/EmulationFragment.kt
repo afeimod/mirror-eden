@@ -856,7 +856,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
                     true
                 }
 
-                R.id.menu_adjust_layout -> {
+                R.id.menu_screen_layout -> {
                     ScreenLayoutAdjustDialog().show(
                         childFragmentManager,
                         "ScreenLayoutAdjustDialog"
