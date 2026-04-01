@@ -78,20 +78,20 @@ class GameScreenLayoutManager @JvmOverloads constructor(
     
     // 手柄绘制 - 使用更透明的样式
     private val handlePaint = Paint().apply {
-        color = Color.argb(100, 33, 150, 243) // 非常透明
+        color = Color.argb(60, 33, 150, 243) // 更加透明
         style = Paint.Style.FILL
         isAntiAlias = true
     }
     
     private val handleStrokePaint = Paint().apply {
-        color = Color.argb(150, 255, 255, 255) // 半透明白色
+        color = Color.argb(100, 255, 255, 255) // 更加透明
         style = Paint.Style.STROKE
         strokeWidth = 2f
         isAntiAlias = true
     }
     
     private val edgePaint = Paint().apply {
-        color = Color.argb(80, 33, 150, 243) // 非常透明的蓝色边框
+        color = Color.argb(50, 33, 150, 243) // 更加透明的蓝色边框
         style = Paint.Style.STROKE
         strokeWidth = 2f
         isAntiAlias = true
