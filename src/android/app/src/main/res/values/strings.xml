@@ -1807,7 +1807,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="preset_fullscreen">Full</string>
     <string name="menu_screen_layout">Screen Layout</string>
     <string name="confirm_save">Confirm</string>
-    <string name="reset">Reset</string>
     <string name="screen_layout_tip">Tip: Drag the dashed border edges or corners to resize the game screen!</string>
 
 </resources>
