@@ -859,8 +859,18 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
                 }
 
                 R.id.menu_screen_layout -> {
+                    // 先关闭 Drawer
+                    binding.drawerLayout.close()
+                    
                     val dialog = ScreenLayoutAdjustDialog()
                     dialog.setLayoutManager(binding.gameScreenLayoutManager)
+                    dialog.setOnShowListener {
+                        // 对话框显示时确保 Drawer 关闭
+                        binding.drawerLayout.close()
+                    }
+                    dialog.setOnDismissListener {
+                        // 对话框关闭后可以再次打开 Drawer（如果需要）
+                    }
                     dialog.show(
                         childFragmentManager,
                         "ScreenLayoutAdjustDialog"

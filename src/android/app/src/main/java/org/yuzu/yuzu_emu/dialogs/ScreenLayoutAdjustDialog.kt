@@ -4,10 +4,13 @@
 package org.yuzu.yuzu_emu.dialogs
 
 import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.yuzu.yuzu_emu.R
@@ -27,6 +30,7 @@ class ScreenLayoutAdjustDialog : DialogFragment() {
     
     private var layoutManager: GameScreenLayoutManager? = null
     private var onDismissListener: (() -> Unit)? = null
+    private var onShowListener: (() -> Unit)? = null
     
     companion object {
         const val TAG = "ScreenLayoutAdjustDialog"
@@ -44,6 +48,10 @@ class ScreenLayoutAdjustDialog : DialogFragment() {
         onDismissListener = listener
     }
     
+    fun setOnShowListener(listener: () -> Unit) {
+        onShowListener = listener
+    }
+    
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         _binding = DialogScreenLayoutAdjustBinding.inflate(layoutInflater)
         
@@ -54,6 +62,33 @@ class ScreenLayoutAdjustDialog : DialogFragment() {
             .setTitle(R.string.screen_layout_adjust)
             .setView(binding.root)
             .create()
+    }
+    
+    override fun onStart() {
+        super.onStart()
+        
+        // 设置对话框背景透明
+        dialog?.window?.apply {
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            
+            // 设置对话框宽度为屏幕宽度的 90%，高度自适应
+            val params = attributes
+            params.width = (resources.displayMetrics.widthPixels * 0.9).toInt()
+            params.height = WindowManager.LayoutParams.WRAP_CONTENT
+            params.y = resources.displayMetrics.heightPixels / 10 // 距顶部 10%
+            attributes = params
+        }
+    }
+    
+    override fun onResume() {
+        super.onResume()
+        // 通知主界面隐藏 Drawer
+        onShowListener?.invoke()
+    }
+    
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
     
     private fun setupUI() {
