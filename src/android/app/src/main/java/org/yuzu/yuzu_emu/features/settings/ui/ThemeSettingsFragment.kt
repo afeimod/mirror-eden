@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 Eden Emulator Project
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 package org.yuzu.yuzu_emu.features.settings.ui
 
 import android.app.Activity
@@ -10,18 +13,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.yuzu.yuzu_emu.R
 import org.yuzu.yuzu_emu.databinding.FragmentThemeSettingsBinding
-import org.yuzu.yuzu_emu.features.settings.model.SettingsItem
-import org.yuzu.yuzu_emu.features.settings.ui.adapter.SettingsAdapter
 import org.yuzu.yuzu_emu.utils.ThemeManager
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ThemeSettingsFragment : Fragment() {
 
@@ -29,7 +28,7 @@ class ThemeSettingsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: SettingsAdapter
-    private val viewModel: ThemeSettingsViewModel by activityViewModels()
+    private val viewModel: ThemeSettingsViewModel by viewModels()
 
     private val openDocumentLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -54,6 +53,7 @@ class ThemeSettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         setupToolbar()
+        setupViewModelCallbacks()
         observeViewModel()
         loadCurrentTheme()
     }
@@ -65,19 +65,20 @@ class ThemeSettingsFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = SettingsAdapter(
-            onItemClick = { item ->
-                when (item.type) {
-                    SettingsItem.ItemType.RUNNABLE -> handleRunnableClick(item)
-                    SettingsItem.ItemType.SWITCH -> handleSwitchClick(item)
-                }
-            },
-            onResume = { viewModel.refresh() }
-        )
+        adapter = SettingsAdapter(this, requireContext())
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@ThemeSettingsFragment.adapter
+        }
+    }
+
+    private fun setupViewModelCallbacks() {
+        viewModel.onSelectCustomTheme = {
+            openFilePicker()
+        }
+        viewModel.onResetToDefault = {
+            confirmResetToDefault()
         }
     }
 
@@ -92,7 +93,7 @@ class ThemeSettingsFragment : Fragment() {
     }
 
     private fun loadCurrentTheme() {
-        val themeManager = ThemeManager.getInstance(requireContext())
+        val themeManager = ThemeManager.getInstance()
         val customPath = themeManager.getCustomThemePath()
         val themeName = if (customPath.isNullOrEmpty()) {
             getString(R.string.current_theme_default)
@@ -104,17 +105,6 @@ class ThemeSettingsFragment : Fragment() {
 
     private fun updateCurrentThemeDisplay(themeName: String) {
         binding.currentThemeText.text = themeName
-    }
-
-    private fun handleRunnableClick(item: SettingsItem) {
-        when (item.key) {
-            "select_custom_theme" -> openFilePicker()
-            "reset_to_default_theme" -> confirmResetToDefault()
-        }
-    }
-
-    private fun handleSwitchClick(item: SettingsItem) {
-        // Handle switch items if needed in the future
     }
 
     private fun openFilePicker() {
@@ -138,7 +128,7 @@ class ThemeSettingsFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            val result = viewModel.applyCustomTheme(requireContext(), uri)
+            val result = viewModel.applyCustomTheme(uri)
 
             if (result) {
                 Toast.makeText(
@@ -165,7 +155,7 @@ class ThemeSettingsFragment : Fragment() {
     }
 
     private fun resetToDefaultTheme() {
-        viewModel.resetToDefault(requireContext())
+        viewModel.resetToDefault()
         Toast.makeText(
             requireContext(),
             R.string.theme_reset_to_default,
