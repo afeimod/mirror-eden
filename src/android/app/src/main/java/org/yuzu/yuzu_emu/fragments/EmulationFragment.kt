@@ -1796,10 +1796,11 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
         }
         when (verticalAlignment) {
             EmulationVerticalAlignment.Top -> {
-                b.surfaceEmulation.setAspectRatio(aspectRatio)
+                // 移除固定宽高比设置，允许画面拉伸填满屏幕宽度
+                b.surfaceEmulation.setAspectRatio(null)
                 val params = FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
+                    ViewGroup.LayoutParams.MATCH_PARENT
                 )
                 params.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
                 b.surfaceEmulation.layoutParams = params
@@ -1814,11 +1815,12 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
             }
 
             EmulationVerticalAlignment.Bottom -> {
-                b.surfaceEmulation.setAspectRatio(aspectRatio)
+                // 移除固定宽高比设置，允许画面拉伸填满屏幕宽度
+                b.surfaceEmulation.setAspectRatio(null)
                 val params =
                     FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
+                        ViewGroup.LayoutParams.MATCH_PARENT
                     )
                 params.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
                 b.surfaceEmulation.layoutParams = params
