@@ -10,6 +10,7 @@ import org.yuzu.yuzu_emu.NativeLibrary
 import org.yuzu.yuzu_emu.R
 import org.yuzu.yuzu_emu.YuzuApplication
 import org.yuzu.yuzu_emu.activities.EmulationActivity
+import org.yuzu.yuzu_emu.features.settings.ui.ThemeSettingsActivity
 import org.yuzu.yuzu_emu.features.input.NativeInput
 import org.yuzu.yuzu_emu.features.input.model.AnalogDirection
 import org.yuzu.yuzu_emu.features.input.model.NativeAnalog
@@ -163,6 +164,14 @@ class SettingsFragmentPresenter(
                         iconId = R.drawable.ic_controller,
                         descriptionId = R.string.input_overlay_options_description,
                         menuKey = MenuTag.SECTION_INPUT_OVERLAY
+                    )
+                )
+                add(
+                    SubmenuSetting(
+                        titleId = R.string.theme_settings,
+                        iconId = R.drawable.ic_palette,
+                        descriptionId = R.string.theme_settings_description,
+                        menuKey = MenuTag.SECTION_APP_SETTINGS
                     )
                 )
             }
@@ -1227,6 +1236,18 @@ class SettingsFragmentPresenter(
             if (!NativeLibrary.isFirmwareAvailable()) {
                 BooleanSetting.ENABLE_QLAUNCH_BUTTON.setBoolean(false)
             }
+
+            add(HeaderSetting(R.string.controller_theme))
+            add(
+                LaunchableSetting(
+                    titleId = R.string.theme_settings,
+                    descriptionId = R.string.theme_settings_description,
+                    iconId = R.drawable.ic_palette,
+                    launchIntent = { context ->
+                        ThemeSettingsActivity.launch(context)
+                    }
+                )
+            )
         }
     }
 
