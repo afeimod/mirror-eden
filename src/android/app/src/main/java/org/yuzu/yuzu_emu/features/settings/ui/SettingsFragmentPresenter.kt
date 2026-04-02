@@ -4,6 +4,7 @@
 package org.yuzu.yuzu_emu.features.settings.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build
 import android.widget.Toast
 import org.yuzu.yuzu_emu.NativeLibrary
@@ -1242,9 +1243,10 @@ class SettingsFragmentPresenter(
                 LaunchableSetting(
                     titleId = R.string.theme_settings,
                     descriptionId = R.string.theme_settings_description,
-                    iconId = R.drawable.ic_palette,
                     launchIntent = { context ->
-                        ThemeSettingsActivity.launch(context)
+                        Intent(context, ThemeSettingsActivity::class.java).also { intent ->
+                            context.startActivity(intent)
+                        }
                     }
                 )
             )
