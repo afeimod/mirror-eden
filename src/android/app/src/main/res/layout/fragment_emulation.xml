@@ -18,20 +18,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!-- 游戏屏幕布局管理器 - 支持四面边缘调整大小 -->
+            <!-- 游戏背景图片 - 放在最底层 -->
+            <ImageView
+                android:id="@+id/game_background_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                android:importantForAccessibility="no" />
+
+            <!-- 游戏屏幕布局管理器 - 只管理游戏画面，不包含背景 -->
             <org.yuzu.yuzu_emu.views.GameScreenLayoutManager
                 android:id="@+id/game_screen_layout_manager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
-                <!-- 游戏背景图片 - 放在 SurfaceView 下面 -->
-                <ImageView
-                    android:id="@+id/game_background_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY"
-                    android:visibility="gone"
-                    android:importantForAccessibility="no" />
 
                 <!-- This is what everything is rendered to during emulation -->
                 <org.yuzu.yuzu_emu.views.FixedRatioSurfaceView

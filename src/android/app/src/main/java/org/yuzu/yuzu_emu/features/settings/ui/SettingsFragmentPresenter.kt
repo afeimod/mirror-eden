@@ -167,14 +167,6 @@ class SettingsFragmentPresenter(
                         menuKey = MenuTag.SECTION_INPUT_OVERLAY
                     )
                 )
-                add(
-                    SubmenuSetting(
-                        titleId = R.string.theme_settings,
-                        iconId = R.drawable.ic_palette,
-                        descriptionId = R.string.theme_settings_description,
-                        menuKey = MenuTag.SECTION_APP_SETTINGS
-                    )
-                )
             }
             add(
                 SubmenuSetting(
@@ -325,6 +317,17 @@ class SettingsFragmentPresenter(
     private fun addInputOverlaySettings(sl: ArrayList<SettingsItem>) {
         sl.apply {
             add(BooleanSetting.SHOW_INPUT_OVERLAY.key)
+            add(
+                LaunchableSetting(
+                    titleId = R.string.theme_settings,
+                    descriptionId = R.string.theme_settings_description,
+                    launchIntent = { context ->
+                        Intent(context, ThemeSettingsActivity::class.java).also { intent ->
+                            context.startActivity(intent)
+                        }
+                    }
+                )
+            )
             add(BooleanSetting.OVERLAY_SNAP_TO_GRID.key)
             add(IntSetting.OVERLAY_GRID_SIZE.key)
             add(
@@ -1237,19 +1240,6 @@ class SettingsFragmentPresenter(
             if (!NativeLibrary.isFirmwareAvailable()) {
                 BooleanSetting.ENABLE_QLAUNCH_BUTTON.setBoolean(false)
             }
-
-            add(HeaderSetting(R.string.controller_theme))
-            add(
-                LaunchableSetting(
-                    titleId = R.string.theme_settings,
-                    descriptionId = R.string.theme_settings_description,
-                    launchIntent = { context ->
-                        Intent(context, ThemeSettingsActivity::class.java).also { intent ->
-                            context.startActivity(intent)
-                        }
-                    }
-                )
-            )
         }
     }
 
