@@ -12,6 +12,7 @@ import org.yuzu.yuzu_emu.R
 import org.yuzu.yuzu_emu.features.settings.model.view.HeaderSetting
 import org.yuzu.yuzu_emu.features.settings.model.view.RunnableSetting
 import org.yuzu.yuzu_emu.features.settings.model.view.SettingsItem
+import org.yuzu.yuzu_emu.features.settings.model.view.SwitchSetting
 import org.yuzu.yuzu_emu.utils.ThemeManager
 
 class ThemeSettingsViewModel(private val app: Application) : AndroidViewModel(app) {
@@ -21,6 +22,9 @@ class ThemeSettingsViewModel(private val app: Application) : AndroidViewModel(ap
 
     private val _currentThemeName = MutableLiveData<String>()
     val currentThemeName: LiveData<String> = _currentThemeName
+
+    private val _backgroundEnabled = MutableLiveData<Boolean>()
+    val backgroundEnabled: LiveData<Boolean> = _backgroundEnabled
 
     // Callbacks to be set by the fragment
     var onSelectCustomTheme: (() -> Unit)? = null
@@ -41,6 +45,28 @@ class ThemeSettingsViewModel(private val app: Application) : AndroidViewModel(ap
         settingsList.add(
             HeaderSetting(
                 titleId = R.string.current_theme
+            )
+        )
+
+        // Background Toggle
+        settingsList.add(
+            SwitchSetting(
+                setting = object : org.yuzu.yuzu_emu.features.settings.model.AbstractSetting {
+                    override val key: String = "theme_background_enabled"
+                    override val defaultValue: Boolean = true
+                    override val isSaveable: Boolean = true
+                    override fun getValueAsString(needsGlobal: Boolean): String = 
+                        (_backgroundEnabled.value ?: true).toString()
+                    override fun reset() {
+                        setBackgroundEnabled(true)
+                    }
+                },
+                titleId = R.string.theme_background,
+                descriptionId = R.string.theme_background_description,
+                isChecked = _backgroundEnabled.value ?: true,
+                onCheckedChange = { enabled ->
+                    setBackgroundEnabled(enabled)
+                }
             )
         )
 
@@ -73,6 +99,11 @@ class ThemeSettingsViewModel(private val app: Application) : AndroidViewModel(ap
 
     fun setCurrentThemeName(name: String) {
         _currentThemeName.value = name
+    }
+
+    fun setBackgroundEnabled(enabled: Boolean) {
+        _backgroundEnabled.value = enabled
+        ThemeManager.getInstance().setBackgroundEnabled(app, enabled)
     }
 
     fun getCurrentThemeNameValue(): String {

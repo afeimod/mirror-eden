@@ -79,9 +79,27 @@ private val DPAD_THEME_MAP = mapOf(
     OverlayControl.COMBINED_DPAD.id to "dpad_standard.png"
 )
 
+private val DPAD_PRESSED_CARDINAL_MAP = mapOf(
+    OverlayControl.COMBINED_DPAD.id to "dpad_standard_cardinal_depressed.png"
+)
+
+private val DPAD_PRESSED_DIAGONAL_MAP = mapOf(
+    OverlayControl.COMBINED_DPAD.id to "dpad_standard_diagonal_depressed.png"
+)
+
 private val JOYSTICK_THEME_MAP = mapOf(
     OverlayControl.STICK_L.id to "joystick.png",
     OverlayControl.STICK_R.id to "joystick.png"
+)
+
+private val JOYSTICK_PRESSED_THEME_MAP = mapOf(
+    OverlayControl.STICK_L.id to "joystick_depressed.png",
+    OverlayControl.STICK_R.id to "joystick_depressed.png"
+)
+
+private val JOYSTICK_RANGE_THEME_MAP = mapOf(
+    OverlayControl.STICK_L.id to "joystick_range.png",
+    OverlayControl.STICK_R.id to "joystick_range.png"
 )
 
 /**
@@ -1235,13 +1253,15 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
             // Initialize the InputOverlayDrawableDpad.
             // First try to load from ThemeManager (custom theme), then fallback to default resources
             val themeManager = ThemeManager.getInstance()
-            val defaultStateBitmap = themeManager.getBitmap(context, "dpad_default.png")
-                ?: themeManager.getBitmap(context, "dpad.png")
+            val defaultAssetName = DPAD_THEME_MAP[OverlayControl.COMBINED_DPAD.id] ?: "dpad_standard.png"
+            val pressedCardinalAssetName = DPAD_PRESSED_CARDINAL_MAP[OverlayControl.COMBINED_DPAD.id] ?: "dpad_standard_cardinal_depressed.png"
+            val pressedDiagonalAssetName = DPAD_PRESSED_DIAGONAL_MAP[OverlayControl.COMBINED_DPAD.id] ?: "dpad_standard_diagonal_depressed.png"
+
+            val defaultStateBitmap = themeManager.getBitmap(context, defaultAssetName)
                 ?: getBitmap(context, defaultResId, scale)
-            val pressedOneDirectionStateBitmap = themeManager.getBitmap(context, "dpad_pressed.png")
-                ?: themeManager.getBitmap(context, "dpad_pressed_one.png")
+            val pressedOneDirectionStateBitmap = themeManager.getBitmap(context, pressedCardinalAssetName)
                 ?: getBitmap(context, pressedOneDirectionResId, scale)
-            val pressedTwoDirectionsStateBitmap = themeManager.getBitmap(context, "dpad_pressed_two.png")
+            val pressedTwoDirectionsStateBitmap = themeManager.getBitmap(context, pressedDiagonalAssetName)
                 ?: getBitmap(context, pressedTwoDirectionsResId, scale)
 
             val overlayDrawable = InputOverlayDrawableDpad(
@@ -1317,17 +1337,16 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
             // First try to load from ThemeManager (custom theme), then fallback to default resources
             val themeManager = ThemeManager.getInstance()
             val isLeftStick = overlayControlData.id == OverlayControl.STICK_L.id
-            val outerAssetName = if (isLeftStick) "joystick_outer_l.png" else "joystick_outer_r.png"
-            val innerAssetName = if (isLeftStick) "joystick_inner_l.png" else "joystick_inner_r.png"
-            val pressedAssetName = if (isLeftStick) "joystick_inner_l_pressed.png" else "joystick_inner_r_pressed.png"
+
+            val outerAssetName = JOYSTICK_THEME_MAP[overlayControlData.id] ?: "joystick.png"
+            val pressedAssetName = JOYSTICK_PRESSED_THEME_MAP[overlayControlData.id] ?: "joystick_depressed.png"
+            val rangeAssetName = JOYSTICK_RANGE_THEME_MAP[overlayControlData.id] ?: "joystick_range.png"
 
             val bitmapOuter = themeManager.getBitmap(context, outerAssetName)
-                ?: themeManager.getBitmap(context, "joystick_outer.png")
                 ?: getBitmap(context, resOuter, scale)
-            val bitmapInnerDefault = themeManager.getBitmap(context, innerAssetName)
-                ?: themeManager.getBitmap(context, "joystick_inner.png")
+            val bitmapInnerDefault = themeManager.getBitmap(context, pressedAssetName)
                 ?: getBitmap(context, defaultResInner, 1.0f)
-            val bitmapInnerPressed = themeManager.getBitmap(context, pressedAssetName)
+            val bitmapInnerPressed = themeManager.getBitmap(context, rangeAssetName)
                 ?: getBitmap(context, pressedResInner, 1.0f)
 
             // Get the minimum and maximum coordinates of the screen where the button can be placed.
