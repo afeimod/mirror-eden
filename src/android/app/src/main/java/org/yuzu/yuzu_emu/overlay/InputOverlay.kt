@@ -842,65 +842,55 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
 
         when {
             button != null -> {
-                val buttonData =
-                    overlayControlData.firstOrNull { it.id == button.overlayControlData.id }
-                if (buttonData != null) {
-                    scaleDialog =
-                        OverlayScaleDialog(context, button.overlayControlData) { newScale ->
-                            saveControlPosition(
-                                button.overlayControlData.id,
-                                button.bounds.centerX(),
-                                button.bounds.centerY(),
-                                individuaScale = newScale,
-                                layout
-                            )
-                            refreshControls()
-                        }
-
-                    scaleDialog?.showDialog(x,y, button.bounds.width(), button.bounds.height())
-
-                }
-            }
-
-            dpad != null -> {
-                val dpadData =
-                    overlayControlData.firstOrNull { it.id == OverlayControl.COMBINED_DPAD.id }
-                if (dpadData != null) {
-                    scaleDialog = OverlayScaleDialog(context, dpadData) { newScale ->
+                // 直接使用按钮的overlayControlData，移除不必要的空值检查
+                // 这样所有按钮都可以显示调整对话框，而不仅仅是joystick
+                scaleDialog =
+                    OverlayScaleDialog(context, button.overlayControlData) { newScale ->
                         saveControlPosition(
-                            OverlayControl.COMBINED_DPAD.id,
-                            dpad.bounds.centerX(),
-                            dpad.bounds.centerY(),
-                            newScale,
-                            layout
-                        )
-
-                        refreshControls()
-                    }
-
-                    scaleDialog?.showDialog(x,y, dpad.bounds.width(), dpad.bounds.height())
-
-                }
-            }
-
-            joystick != null -> {
-                val joystickData = overlayControlData.firstOrNull { it.id == joystick.prefId }
-                if (joystickData != null) {
-                    scaleDialog = OverlayScaleDialog(context, joystickData) { newScale ->
-                        saveControlPosition(
-                            joystick.prefId,
-                            joystick.bounds.centerX(),
-                            joystick.bounds.centerY(),
+                            button.overlayControlData.id,
+                            button.bounds.centerX(),
+                            button.bounds.centerY(),
                             individuaScale = newScale,
                             layout
                         )
-
                         refreshControls()
                     }
 
-                    scaleDialog?.showDialog(x,y, joystick.bounds.width(), joystick.bounds.height())
+                scaleDialog?.showDialog(x,y, button.bounds.width(), button.bounds.height())
+            }
 
+            dpad != null -> {
+                // 直接使用dpad的overlayControlData，移除不必要的空值检查
+                scaleDialog = OverlayScaleDialog(context, dpadData) { newScale ->
+                    saveControlPosition(
+                        OverlayControl.COMBINED_DPAD.id,
+                        dpad.bounds.centerX(),
+                        dpad.bounds.centerY(),
+                        newScale,
+                        layout
+                    )
+
+                    refreshControls()
                 }
+
+                scaleDialog?.showDialog(x,y, dpad.bounds.width(), dpad.bounds.height())
+            }
+
+            joystick != null -> {
+                // 直接使用joystick的overlayControlData，移除不必要的空值检查
+                scaleDialog = OverlayScaleDialog(context, joystickData) { newScale ->
+                    saveControlPosition(
+                        joystick.prefId,
+                        joystick.bounds.centerX(),
+                        joystick.bounds.centerY(),
+                        individuaScale = newScale,
+                        layout
+                    )
+
+                    refreshControls()
+                }
+
+                scaleDialog?.showDialog(x,y, joystick.bounds.width(), joystick.bounds.height())
             }
         }
     }
