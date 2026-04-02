@@ -1161,8 +1161,9 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
             val themeManager = ThemeManager.getInstance()
             val themeAssetName = BUTTON_THEME_MAP[overlayControlData.id]
             val themedDefaultBitmap = if (themeAssetName != null) {
-                val baseName = themeAssetName.removeSuffix(".png")
-                themeManager.getBitmap(context, "${baseName}_default.png")
+                // Try exact match first, then base name without _depressed
+                val baseName = themeAssetName.removeSuffix("_depressed.png")
+                themeManager.getBitmap(context, themeAssetName)
                     ?: themeManager.getBitmap(context, "$baseName.png")
                     ?: getBitmap(context, defaultResId, scale)
             } else {
@@ -1170,8 +1171,8 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
             }
 
             val themedPressedBitmap = if (themeAssetName != null) {
-                val baseName = themeAssetName.removeSuffix(".png")
-                themeManager.getBitmap(context, "${baseName}_pressed.png")
+                val baseName = themeAssetName.removeSuffix("_depressed.png")
+                themeManager.getBitmap(context, "${baseName}_depressed.png")
                     ?: getBitmap(context, pressedResId, scale)
             } else {
                 getBitmap(context, pressedResId, scale)
