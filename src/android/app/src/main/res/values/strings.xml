@@ -44,6 +44,23 @@
     <string name="edit_overlay_layout">Edit Overlay Layout</string>
     <string name="edit_overlay_layout_description">Adjust the position and scale of on-screen controls</string>
 
+    <!-- Theme Settings -->
+    <string name="theme_settings">Controller Theme</string>
+    <string name="theme_settings_description">Customize the appearance of on-screen controls with custom themes</string>
+    <string name="select_custom_theme">Select Custom Theme</string>
+    <string name="select_custom_theme_description">Choose a ZIP archive containing button and background images</string>
+    <string name="reset_to_default_theme">Reset to Default Theme</string>
+    <string name="reset_to_default_theme_description">Restore the original default theme</string>
+    <string name="current_theme">Current Theme</string>
+    <string name="current_theme_default">Default</string>
+    <string name="current_theme_custom">Custom: %s</string>
+    <string name="custom_theme_applied">Theme applied successfully</string>
+    <string name="theme_reset_to_default">Theme reset to default</string>
+    <string name="theme_load_error">Failed to load theme</string>
+    <string name="theme_load_error_description">The selected file may be corrupted or not a valid theme archive</string>
+    <string name="theme_file_selected">Theme file selected: %s</string>
+    <string name="no_custom_theme_selected">No custom theme selected</string>
+
 
     <!-- Stats Overlay settings -->
     <string name="process_ram">Process RAM: %1$d MB</string>
