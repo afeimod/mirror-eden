@@ -17,6 +17,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.net.Uri
+import android.graphics.PixelFormat
 import android.os.BatteryManager
 import android.os.BatteryManager.*
 import android.os.Build
@@ -672,6 +673,11 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
         updateQuickOverlayMenuEntry(BooleanSetting.SHOW_INPUT_OVERLAY.getBoolean())
 
         binding.surfaceEmulation.holder.addCallback(this)
+        
+        // 设置 SurfaceView 透明，使背景图片能够显示
+        binding.surfaceEmulation.setZOrderOnTop(true)
+        binding.surfaceEmulation.holder.setFormat(PixelFormat.TRANSLUCENT)
+        
         binding.doneControlConfig.setOnClickListener { stopConfiguringControls() }
 
         binding.drawerLayout.addDrawerListener(object : DrawerListener {
