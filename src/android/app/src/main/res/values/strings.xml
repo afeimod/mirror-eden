@@ -47,6 +47,7 @@
     <!-- Theme Settings -->
     <string name="theme_settings">Controller Theme</string>
     <string name="theme_settings_description">Customize the appearance of on-screen controls with custom themes</string>
+    <string name="controller_theme">Controller Theme</string>
     <string name="theme_background">Game Background</string>
     <string name="theme_background_description">Tap to toggle custom background image during gameplay</string>
     <string name="theme_background_enabled">Background image enabled</string>
