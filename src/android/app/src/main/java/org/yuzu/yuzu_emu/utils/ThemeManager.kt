@@ -399,6 +399,14 @@ class ThemeManager private constructor() {
     }
 
     /**
+     * Check if background is enabled
+     */
+    fun isBackgroundEnabled(context: Context): Boolean {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        return prefs.getBoolean(PREF_THEME_BACKGROUND_ENABLED, true)
+    }
+
+    /**
      * Set background visibility preference
      */
     fun setBackgroundEnabled(context: Context, enabled: Boolean) {
