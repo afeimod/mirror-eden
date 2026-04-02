@@ -31,6 +31,7 @@ class ThemeManager private constructor() {
         const val PREF_CUSTOM_THEME_URI = "custom_theme_uri"
         const val PREF_THEME_BACKGROUND_ENABLED = "theme_background_enabled"
         const val DEFAULT_THEME_NAME = "default"
+        const val BACKGROUND_IMAGE_NAME = "background.png"
         private const val THEME_CACHE_DIR = "theme_cache"
 
         @Volatile
@@ -404,6 +405,4 @@ class ThemeManager private constructor() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         prefs.edit().putBoolean(PREF_THEME_BACKGROUND_ENABLED, enabled).apply()
     }
-
-    const val BACKGROUND_IMAGE_NAME = "background.png"
 }
