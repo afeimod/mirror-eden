@@ -80,6 +80,14 @@ class ThemeSettingsFragment : Fragment() {
         viewModel.onResetToDefault = {
             confirmResetToDefault()
         }
+        viewModel.onToggleBackground = { enabled ->
+            ThemeManager.getInstance().setBackgroundEnabled(requireContext(), enabled)
+            Toast.makeText(
+                requireContext(),
+                if (enabled) R.string.theme_background_enabled else R.string.theme_background_disabled,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     private fun observeViewModel() {
