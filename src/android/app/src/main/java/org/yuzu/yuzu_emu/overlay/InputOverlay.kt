@@ -1342,12 +1342,43 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
             val pressedAssetName = JOYSTICK_PRESSED_THEME_MAP[overlayControlData.id] ?: "joystick_depressed.png"
             val rangeAssetName = JOYSTICK_RANGE_THEME_MAP[overlayControlData.id] ?: "joystick_range.png"
 
-            val bitmapOuter = themeManager.getBitmap(context, outerAssetName)
-                ?: getBitmap(context, resOuter, scale)
-            val bitmapInnerDefault = themeManager.getBitmap(context, pressedAssetName)
-                ?: getBitmap(context, defaultResInner, 1.0f)
-            val bitmapInnerPressed = themeManager.getBitmap(context, rangeAssetName)
-                ?: getBitmap(context, pressedResInner, 1.0f)
+            // Apply scale to themed bitmap if loaded, otherwise use default resources
+            val bitmapOuter = if (outerAssetName != null) {
+                val themedBitmap = themeManager.getBitmap(context, outerAssetName)
+                if (themedBitmap != null) {
+                    Bitmap.createScaledBitmap(themedBitmap,
+                        (themedBitmap.width * scale).toInt(),
+                        (themedBitmap.height * scale).toInt(), true)
+                } else {
+                    getBitmap(context, resOuter, scale)
+                }
+            } else {
+                getBitmap(context, resOuter, scale)
+            }
+            val bitmapInnerDefault = if (pressedAssetName != null) {
+                val themedBitmap = themeManager.getBitmap(context, pressedAssetName)
+                if (themedBitmap != null) {
+                    Bitmap.createScaledBitmap(themedBitmap,
+                        (themedBitmap.width * scale).toInt(),
+                        (themedBitmap.height * scale).toInt(), true)
+                } else {
+                    getBitmap(context, defaultResInner, scale)
+                }
+            } else {
+                getBitmap(context, defaultResInner, scale)
+            }
+            val bitmapInnerPressed = if (rangeAssetName != null) {
+                val themedBitmap = themeManager.getBitmap(context, rangeAssetName)
+                if (themedBitmap != null) {
+                    Bitmap.createScaledBitmap(themedBitmap,
+                        (themedBitmap.width * scale).toInt(),
+                        (themedBitmap.height * scale).toInt(), true)
+                } else {
+                    getBitmap(context, pressedResInner, scale)
+                }
+            } else {
+                getBitmap(context, pressedResInner, scale)
+            }
 
             // Get the minimum and maximum coordinates of the screen where the button can be placed.
             val min = windowSize.first
