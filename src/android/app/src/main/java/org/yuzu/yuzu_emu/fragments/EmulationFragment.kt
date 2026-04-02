@@ -95,6 +95,7 @@ import org.yuzu.yuzu_emu.utils.Log
 import org.yuzu.yuzu_emu.utils.NativeConfig
 import org.yuzu.yuzu_emu.utils.NativeFreedrenoConfig
 import org.yuzu.yuzu_emu.utils.ScreenLayoutManager
+import org.yuzu.yuzu_emu.utils.ThemeManager
 import org.yuzu.yuzu_emu.views.GameScreenLayoutManager
 import org.yuzu.yuzu_emu.utils.ViewUtils
 import org.yuzu.yuzu_emu.utils.ViewUtils.setVisible
@@ -718,6 +719,9 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
         }
 
         updateGameTitle()
+
+        // Load and apply background image from theme
+        loadBackgroundImage()
 
         binding.inGameMenu.menu.findItem(R.id.menu_quick_settings)?.isVisible =
             BooleanSetting.ENABLE_QUICK_SETTINGS.getBoolean()
@@ -2454,6 +2458,32 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
             arrayOf("application/octet-stream", "application/x-binary", "*/*")
         private val perfStatsUpdateHandler = Handler(Looper.myLooper()!!)
         private val socUpdateHandler = Handler(Looper.myLooper()!!)
+    }
+
+    /**
+     * Load and display background image from theme
+     */
+    private fun loadBackgroundImage() {
+        val b = _binding ?: return
+        try {
+            val themeManager = ThemeManager.getInstance()
+            if (themeManager.shouldShowBackground(requireContext())) {
+                val backgroundBitmap = themeManager.getBackgroundBitmap(requireContext())
+                if (backgroundBitmap != null) {
+                    b.gameBackgroundImage.setImageBitmap(backgroundBitmap)
+                    b.gameBackgroundImage.visibility = View.VISIBLE
+                    Log.info("[EmulationFragment] Background image loaded successfully")
+                } else {
+                    b.gameBackgroundImage.visibility = View.GONE
+                    Log.info("[EmulationFragment] No background image available")
+                }
+            } else {
+                b.gameBackgroundImage.visibility = View.GONE
+            }
+        } catch (e: Exception) {
+            Log.error("[EmulationFragment] Failed to load background image: ${e.message}")
+            b.gameBackgroundImage.visibility = View.GONE
+        }
     }
 
     private fun startOverlayAutoHideTimer(seconds: Int) {

@@ -38,6 +38,51 @@ import org.yuzu.yuzu_emu.overlay.model.OverlayControl
 import org.yuzu.yuzu_emu.overlay.model.OverlayControlData
 import org.yuzu.yuzu_emu.overlay.model.OverlayLayout
 import org.yuzu.yuzu_emu.utils.NativeConfig
+import org.yuzu.yuzu_emu.utils.ThemeManager
+
+// Mapping of OverlayControl IDs to theme asset names (matching user's default.zip)
+private val BUTTON_THEME_MAP = mapOf(
+    OverlayControl.BUTTON_A.id to "facebutton_a.png",
+    OverlayControl.BUTTON_B.id to "facebutton_b.png",
+    OverlayControl.BUTTON_X.id to "facebutton_x.png",
+    OverlayControl.BUTTON_Y.id to "facebutton_y.png",
+    OverlayControl.BUTTON_PLUS.id to "facebutton_plus.png",
+    OverlayControl.BUTTON_MINUS.id to "facebutton_minus.png",
+    OverlayControl.BUTTON_HOME.id to "facebutton_home.png",
+    OverlayControl.BUTTON_CAPTURE.id to "facebutton_screenshot.png",
+    OverlayControl.BUTTON_L.id to "l_shoulder.png",
+    OverlayControl.BUTTON_R.id to "r_shoulder.png",
+    OverlayControl.BUTTON_ZL.id to "zl_trigger.png",
+    OverlayControl.BUTTON_ZR.id to "zr_trigger.png",
+    OverlayControl.BUTTON_STICK_L.id to "button_l3.png",
+    OverlayControl.BUTTON_STICK_R.id to "button_r3.png"
+)
+
+private val BUTTON_PRESSED_THEME_MAP = mapOf(
+    OverlayControl.BUTTON_A.id to "facebutton_a_depressed.png",
+    OverlayControl.BUTTON_B.id to "facebutton_b_depressed.png",
+    OverlayControl.BUTTON_X.id to "facebutton_x_depressed.png",
+    OverlayControl.BUTTON_Y.id to "facebutton_y_depressed.png",
+    OverlayControl.BUTTON_PLUS.id to "facebutton_plus_depressed.png",
+    OverlayControl.BUTTON_MINUS.id to "facebutton_minus_depressed.png",
+    OverlayControl.BUTTON_HOME.id to "facebutton_home_depressed.png",
+    OverlayControl.BUTTON_CAPTURE.id to "facebutton_screenshot_depressed.png",
+    OverlayControl.BUTTON_L.id to "l_shoulder_depressed.png",
+    OverlayControl.BUTTON_R.id to "r_shoulder_depressed.png",
+    OverlayControl.BUTTON_ZL.id to "zl_trigger_depressed.png",
+    OverlayControl.BUTTON_ZR.id to "zr_trigger_depressed.png",
+    OverlayControl.BUTTON_STICK_L.id to "button_l3_depressed.png",
+    OverlayControl.BUTTON_STICK_R.id to "button_r3_depressed.png"
+)
+
+private val DPAD_THEME_MAP = mapOf(
+    OverlayControl.COMBINED_DPAD.id to "dpad_standard.png"
+)
+
+private val JOYSTICK_THEME_MAP = mapOf(
+    OverlayControl.STICK_L.id to "joystick.png",
+    OverlayControl.STICK_R.id to "joystick.png"
+)
 
 /**
  * Draws the interactive input overlay on top of the
@@ -1094,12 +1139,30 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
             scale *= overlayControlData.individualScale.let { if (it > 0f) it else 1f }
 
             // Initialize the InputOverlayDrawableButton.
-            val defaultStateBitmap = getBitmap(context, defaultResId, scale)
-            val pressedStateBitmap = getBitmap(context, pressedResId, scale)
+            // First try to load from ThemeManager (custom theme), then fallback to default resources
+            val themeManager = ThemeManager.getInstance()
+            val themeAssetName = BUTTON_THEME_MAP[overlayControlData.id]
+            val themedDefaultBitmap = if (themeAssetName != null) {
+                val baseName = themeAssetName.removeSuffix(".png")
+                themeManager.getBitmap(context, "${baseName}_default.png")
+                    ?: themeManager.getBitmap(context, "$baseName.png")
+                    ?: getBitmap(context, defaultResId, scale)
+            } else {
+                getBitmap(context, defaultResId, scale)
+            }
+
+            val themedPressedBitmap = if (themeAssetName != null) {
+                val baseName = themeAssetName.removeSuffix(".png")
+                themeManager.getBitmap(context, "${baseName}_pressed.png")
+                    ?: getBitmap(context, pressedResId, scale)
+            } else {
+                getBitmap(context, pressedResId, scale)
+            }
+
             val overlayDrawable = InputOverlayDrawableButton(
                 res,
-                defaultStateBitmap,
-                pressedStateBitmap,
+                themedDefaultBitmap,
+                themedPressedBitmap,
                 button,
                 overlayControlData
             )
@@ -1170,11 +1233,16 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
             }
 
             // Initialize the InputOverlayDrawableDpad.
-            val defaultStateBitmap =
-                getBitmap(context, defaultResId, scale)
-            val pressedOneDirectionStateBitmap = getBitmap(context, pressedOneDirectionResId, scale)
-            val pressedTwoDirectionsStateBitmap =
-                getBitmap(context, pressedTwoDirectionsResId, scale)
+            // First try to load from ThemeManager (custom theme), then fallback to default resources
+            val themeManager = ThemeManager.getInstance()
+            val defaultStateBitmap = themeManager.getBitmap(context, "dpad_default.png")
+                ?: themeManager.getBitmap(context, "dpad.png")
+                ?: getBitmap(context, defaultResId, scale)
+            val pressedOneDirectionStateBitmap = themeManager.getBitmap(context, "dpad_pressed.png")
+                ?: themeManager.getBitmap(context, "dpad_pressed_one.png")
+                ?: getBitmap(context, pressedOneDirectionResId, scale)
+            val pressedTwoDirectionsStateBitmap = themeManager.getBitmap(context, "dpad_pressed_two.png")
+                ?: getBitmap(context, pressedTwoDirectionsResId, scale)
 
             val overlayDrawable = InputOverlayDrawableDpad(
                 res,
@@ -1246,9 +1314,21 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
             scale *= overlayControlData.individualScale.let { if (it > 0f) it else 1f }
 
             // Initialize the InputOverlayDrawableJoystick.
-            val bitmapOuter = getBitmap(context, resOuter, scale)
-            val bitmapInnerDefault = getBitmap(context, defaultResInner, 1.0f)
-            val bitmapInnerPressed = getBitmap(context, pressedResInner, 1.0f)
+            // First try to load from ThemeManager (custom theme), then fallback to default resources
+            val themeManager = ThemeManager.getInstance()
+            val isLeftStick = overlayControlData.id == OverlayControl.STICK_L.id
+            val outerAssetName = if (isLeftStick) "joystick_outer_l.png" else "joystick_outer_r.png"
+            val innerAssetName = if (isLeftStick) "joystick_inner_l.png" else "joystick_inner_r.png"
+            val pressedAssetName = if (isLeftStick) "joystick_inner_l_pressed.png" else "joystick_inner_r_pressed.png"
+
+            val bitmapOuter = themeManager.getBitmap(context, outerAssetName)
+                ?: themeManager.getBitmap(context, "joystick_outer.png")
+                ?: getBitmap(context, resOuter, scale)
+            val bitmapInnerDefault = themeManager.getBitmap(context, innerAssetName)
+                ?: themeManager.getBitmap(context, "joystick_inner.png")
+                ?: getBitmap(context, defaultResInner, 1.0f)
+            val bitmapInnerPressed = themeManager.getBitmap(context, pressedAssetName)
+                ?: getBitmap(context, pressedResInner, 1.0f)
 
             // Get the minimum and maximum coordinates of the screen where the button can be placed.
             val min = windowSize.first
