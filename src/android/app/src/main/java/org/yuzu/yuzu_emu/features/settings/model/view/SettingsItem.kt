@@ -623,14 +623,6 @@ abstract class SettingsItem(
             )
             put(
                 SingleChoiceSetting(
-                    IntSetting.RENDERER_ASPECT_RATIO,
-                    titleId = R.string.renderer_aspect_ratio,
-                    choicesId = R.array.rendererAspectRatioNames,
-                    valuesId = R.array.rendererAspectRatioValues
-                )
-            )
-            put(
-                SingleChoiceSetting(
                     IntSetting.VERTICAL_ALIGNMENT,
                     titleId = R.string.vertical_alignment,
                     descriptionId = 0,
