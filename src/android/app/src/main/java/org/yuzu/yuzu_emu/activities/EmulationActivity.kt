@@ -570,14 +570,8 @@ class EmulationActivity : AppCompatActivity(), SensorEventListener, InputManager
 
     private fun PictureInPictureParams.Builder.getPictureInPictureAspectBuilder():
         PictureInPictureParams.Builder {
-        val aspectRatio = when (IntSetting.RENDERER_ASPECT_RATIO.getInt()) {
-            0 -> Rational(16, 9)
-            1 -> Rational(4, 3)
-            2 -> Rational(21, 9)
-            3 -> Rational(16, 10)
-            else -> null // Best fit
-        }
-        return this.apply { aspectRatio?.let { setAspectRatio(it) } }
+        // 强制拉伸模式，不设置固定宽高比，允许画面填充整个窗口
+        return this
     }
 
     private fun PictureInPictureParams.Builder.getPictureInPictureActionsBuilder():
