@@ -1834,17 +1834,17 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
         val b = _binding ?: return
         try {
             val config = ScreenLayoutManager.loadLayoutConfig(requireContext())
-            if (config.enabled) {
-                b.gameScreenLayoutManager.loadLayoutConfig(
-                    GameScreenLayoutManager.LayoutMargins(
-                        config.left,
-                        config.top,
-                        config.right,
-                        config.bottom
-                    )
+            // 始终应用布局设置，不管 enabled 状态
+            // 这样可以确保默认的 left=200, right=200 边距实时生效
+            b.gameScreenLayoutManager.loadLayoutConfig(
+                GameScreenLayoutManager.LayoutMargins(
+                    config.left,
+                    config.top,
+                    config.right,
+                    config.bottom
                 )
-                b.gameScreenLayoutManager.isAdjustModeEnabled = true
-            }
+            )
+            b.gameScreenLayoutManager.isAdjustModeEnabled = config.enabled
         } catch (e: Exception) {
             // 忽略错误，使用默认设置
         }
