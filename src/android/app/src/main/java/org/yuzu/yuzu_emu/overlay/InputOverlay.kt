@@ -839,6 +839,8 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
         // prevent dialog from being spam opened
         scaleDialog?.dismiss()
 
+        // 获取dpad和joystick的control data
+        val dpadData = overlayControlData.firstOrNull { it.id == OverlayControl.COMBINED_DPAD.id }
 
         when {
             button != null -> {
@@ -860,8 +862,8 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
             }
 
             dpad != null -> {
-                // 直接使用dpad的overlayControlData，移除不必要的空值检查
-                scaleDialog = OverlayScaleDialog(context, dpadData) { newScale ->
+                // 使用dpadData，移除不必要的空值检查
+                scaleDialog = OverlayScaleDialog(context, dpadData!!) { newScale ->
                     saveControlPosition(
                         OverlayControl.COMBINED_DPAD.id,
                         dpad.bounds.centerX(),
@@ -877,8 +879,9 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
             }
 
             joystick != null -> {
-                // 直接使用joystick的overlayControlData，移除不必要的空值检查
-                scaleDialog = OverlayScaleDialog(context, joystickData) { newScale ->
+                // 获取joystick的control data，移除不必要的空值检查
+                val joystickData = overlayControlData.firstOrNull { it.id == joystick.prefId }
+                scaleDialog = OverlayScaleDialog(context, joystickData!!) { newScale ->
                     saveControlPosition(
                         joystick.prefId,
                         joystick.bounds.centerX(),
