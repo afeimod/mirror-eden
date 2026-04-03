@@ -205,6 +205,21 @@
         <item>3</item>
     </integer-array>
 
+    <!-- Aspect Ratio Settings -->
+    <string-array name="aspectRatioNames">
+        <item>@string/aspect_ratio_stretch</item>
+        <item>@string/aspect_ratio_16_9</item>
+        <item>@string/aspect_ratio_4_3</item>
+        <item>@string/aspect_ratio_21_9</item>
+    </string-array>
+
+    <integer-array name="aspectRatioValues">
+        <item>0</item>  <!-- Stretch (default) -->
+        <item>1</item>  <!-- 16:9 -->
+        <item>2</item>  <!-- 4:3 -->
+        <item>3</item>  <!-- 21:9 -->
+    </integer-array>
+
     <string-array name="rendererScreenLayoutNames">
         <item>@string/screen_layout_auto</item>
         <item>@string/screen_layout_sensor_landscape</item>
