@@ -1787,11 +1787,37 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
         val b = _binding ?: return
         val verticalAlignment =
             EmulationVerticalAlignment.from(IntSetting.VERTICAL_ALIGNMENT.getInt())
-        // 强制拉伸模式 - 不设置固定宽高比，允许画面填充整个窗口
+        
+        // 读取纵横比设置：0=拉伸，1=16:9，2=4:3，3=21:9
+        val aspectRatioValue = IntSetting.RENDERER_ASPECT_RATIO.getInt()
+        
+        // 根据纵横比设置应用显示模式
+        when (aspectRatioValue) {
+            0 -> {
+                // 拉伸模式：填满整个父容器，不维护纵横比
+                b.surfaceEmulation.setAspectRatio(null)
+            }
+            1 -> {
+                // 16:9 模式
+                b.surfaceEmulation.setAspectRatio(Rational(16, 9))
+            }
+            2 -> {
+                // 4:3 模式
+                b.surfaceEmulation.setAspectRatio(Rational(4, 3))
+            }
+            3 -> {
+                // 21:9 模式
+                b.surfaceEmulation.setAspectRatio(Rational(21, 9))
+            }
+            else -> {
+                // 默认拉伸模式
+                b.surfaceEmulation.setAspectRatio(null)
+            }
+        }
+        
+        // 根据垂直对齐方式设置布局参数
         when (verticalAlignment) {
             EmulationVerticalAlignment.Top -> {
-                // 移除固定宽高比设置，允许画面拉伸填满屏幕宽度
-                b.surfaceEmulation.setAspectRatio(null)
                 val params = FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
@@ -1801,7 +1827,6 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
             }
 
             EmulationVerticalAlignment.Center -> {
-                b.surfaceEmulation.setAspectRatio(null)
                 b.surfaceEmulation.updateLayoutParams {
                     width = ViewGroup.LayoutParams.MATCH_PARENT
                     height = ViewGroup.LayoutParams.MATCH_PARENT
@@ -1809,8 +1834,6 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
             }
 
             EmulationVerticalAlignment.Bottom -> {
-                // 移除固定宽高比设置，允许画面拉伸填满屏幕宽度
-                b.surfaceEmulation.setAspectRatio(null)
                 val params =
                     FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
