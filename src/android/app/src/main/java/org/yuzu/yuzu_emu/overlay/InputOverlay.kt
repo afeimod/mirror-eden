@@ -1318,8 +1318,8 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
             // Resources handle for fetching the initial Drawable resource.
             val res = context.resources
 
-            // Decide scale based on user preference
-            var scale = 0.3f
+            // 增大 joystick 的默认大小，从 0.3f 改为 0.6f，让摇杆更容易看到和操作
+            var scale = 0.6f
             scale *= (IntSetting.OVERLAY_SCALE.getInt() + 50).toFloat()
             scale /= 100f
 
