@@ -225,22 +225,6 @@
         <item>3</item>
     </integer-array>
 
-    <string-array name="rendererAspectRatioNames">
-        <item>@string/ratio_default</item>
-        <item>@string/ratio_force_four_three</item>
-        <item>@string/ratio_force_twenty_one_nine</item>
-        <item>@string/ratio_force_sixteen_ten</item>
-        <item>@string/ratio_stretch</item>
-    </string-array>
-
-    <integer-array name="rendererAspectRatioValues">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </integer-array>
-
     <string-array name="rendererScalingFilterNames">
         <item>@string/scaling_filter_nearest_neighbor</item>
         <item>@string/scaling_filter_bilinear</item>
