@@ -25,8 +25,33 @@ class FixedRatioSurfaceView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        // 强制拉伸模式 - 不管 aspectRatio 的值如何，始终填满整个父容器
-        // 这样可以确保游戏画面总是拉伸到全屏，没有黑边
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        // 从 MeasureSpec 中提取父容器提供的尺寸
+        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
+        val widthSize = MeasureSpec.getSize(widthMeasureSpec)
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+        val heightSize = MeasureSpec.getSize(heightMeasureSpec)
+
+        if (aspectRatio == 0f) {
+            // 拉伸模式：aspectRatio 为 0f 时，填满整个父容器
+            // 不维护任何纵横比，让画面完全拉伸到全屏
+            setMeasuredDimension(widthSize, heightSize)
+        } else {
+            // 固定纵横比模式：根据指定的纵横比计算尺寸
+            val ratio = aspectRatio
+
+            // 计算基于宽度的情况
+            val widthBasedHeight = (widthSize / ratio).toInt()
+            // 计算基于高度的情况
+            val heightBasedWidth = (heightSize * ratio).toInt()
+
+            // 选择不会超出父容器范围的方案
+            val (finalWidth, finalHeight) = if (widthBasedHeight <= heightSize) {
+                widthSize to widthBasedHeight
+            } else {
+                heightBasedWidth to heightSize
+            }
+
+            setMeasuredDimension(finalWidth, finalHeight)
+        }
     }
 }
