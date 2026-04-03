@@ -289,7 +289,6 @@ class SettingsFragmentPresenter(
             add(HeaderSetting(R.string.display))
 
             add(IntSetting.RENDERER_SCREEN_LAYOUT.key)
-            add(IntSetting.RENDERER_ASPECT_RATIO.key)
             add(IntSetting.VERTICAL_ALIGNMENT.key)
             add(BooleanSetting.PICTURE_IN_PICTURE.key)
         }
