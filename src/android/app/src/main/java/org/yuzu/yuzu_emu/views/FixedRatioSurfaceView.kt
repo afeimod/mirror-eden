@@ -25,34 +25,8 @@ class FixedRatioSurfaceView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val displayWidth: Float = MeasureSpec.getSize(widthMeasureSpec).toFloat()
-        val displayHeight: Float = MeasureSpec.getSize(heightMeasureSpec).toFloat()
-        if (aspectRatio != 0f) {
-            val displayAspect = displayWidth / displayHeight
-            if (displayAspect < aspectRatio) {
-                // Max out width
-                val halfHeight = displayHeight / 2
-                val surfaceHeight = displayWidth / aspectRatio
-                val newTop: Float = halfHeight - (surfaceHeight / 2)
-                val newBottom: Float = halfHeight + (surfaceHeight / 2)
-                super.onMeasure(
-                    widthMeasureSpec,
-                    MeasureSpec.makeMeasureSpec(
-                        newBottom.toInt() - newTop.toInt(),
-                        MeasureSpec.EXACTLY
-                    )
-                )
-                return
-            } else {
-                // Max out height - 修改为填满宽度，移除左右黑边
-                // 强制使用完整宽度，让游戏画面拉伸或裁剪以填满整个宽度
-                super.onMeasure(
-                    widthMeasureSpec,
-                    heightMeasureSpec
-                )
-                return
-            }
-        }
+        // 强制拉伸模式 - 不管 aspectRatio 的值如何，始终填满整个父容器
+        // 这样可以确保游戏画面总是拉伸到全屏，没有黑边
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 }
