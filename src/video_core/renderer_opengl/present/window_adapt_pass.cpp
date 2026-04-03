@@ -90,10 +90,8 @@ void WindowAdaptPass::DrawToFramebuffer(ProgramManager& program_manager, std::li
 
     glBindSampler(0, sampler.handle);
 
-    // Update background color before drawing
-    glClearColor(Settings::values.bg_red.GetValue() / 255.0f,
-                 Settings::values.bg_green.GetValue() / 255.0f,
-                 Settings::values.bg_blue.GetValue() / 255.0f, 1.0f);
+    // Update background color before drawing - 设置为透明色让background.png透过来
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     glClear(GL_COLOR_BUFFER_BIT);
 
