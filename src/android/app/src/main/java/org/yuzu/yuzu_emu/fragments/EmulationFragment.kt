@@ -1787,13 +1787,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
         val b = _binding ?: return
         val verticalAlignment =
             EmulationVerticalAlignment.from(IntSetting.VERTICAL_ALIGNMENT.getInt())
-        val aspectRatio = when (IntSetting.RENDERER_ASPECT_RATIO.getInt()) {
-            0 -> Rational(16, 9)
-            1 -> Rational(4, 3)
-            2 -> Rational(21, 9)
-            3 -> Rational(16, 10)
-            else -> null // Best fit
-        }
+        // 强制拉伸模式 - 不设置固定宽高比，允许画面填充整个窗口
         when (verticalAlignment) {
             EmulationVerticalAlignment.Top -> {
                 // 移除固定宽高比设置，允许画面拉伸填满屏幕宽度
