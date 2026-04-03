@@ -844,24 +844,21 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
 
         when {
             button != null -> {
-                // 从 NativeConfig 获取的数组中查找对应的控件数据
-                // 确保 saveControlPosition 能够正确保存缩放值
-                val buttonData = overlayControlData.firstOrNull { it.id == button.overlayControlData.id }
-                if (buttonData != null) {
-                    scaleDialog =
-                        OverlayScaleDialog(context, buttonData) { newScale ->
-                            saveControlPosition(
-                                buttonData.id,
-                                button.bounds.centerX(),
-                                button.bounds.centerY(),
-                                individuaScale = newScale,
-                                layout
-                            )
-                            refreshControls()
-                        }
+                // 直接使用按钮的overlayControlData，移除不必要的空值检查
+                // 这样所有按钮都可以显示调整对话框，而不仅仅是joystick
+                scaleDialog =
+                    OverlayScaleDialog(context, button.overlayControlData) { newScale ->
+                        saveControlPosition(
+                            button.overlayControlData.id,
+                            button.bounds.centerX(),
+                            button.bounds.centerY(),
+                            individuaScale = newScale,
+                            layout
+                        )
+                        refreshControls()
+                    }
 
-                    scaleDialog?.showDialog(x,y, button.bounds.width(), button.bounds.height())
-                }
+                scaleDialog?.showDialog(x,y, button.bounds.width(), button.bounds.height())
             }
 
             dpad != null -> {
@@ -1129,22 +1126,22 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
             // Resources handle for fetching the initial Drawable resource.
             val res = context.resources
 
-            // 增大所有按钮的默认大小，让它们更容易看到和操作
+            // Decide scale based on button preference ID and user preference
             var scale: Float = when (overlayControlData.id) {
                 OverlayControl.BUTTON_HOME.id,
                 OverlayControl.BUTTON_CAPTURE.id,
                 OverlayControl.BUTTON_PLUS.id,
-                OverlayControl.BUTTON_MINUS.id -> 0.05f  // 从 0.07f 增大到 0.15f
+                OverlayControl.BUTTON_MINUS.id -> 0.07f
 
                 OverlayControl.BUTTON_L.id,
                 OverlayControl.BUTTON_R.id,
                 OverlayControl.BUTTON_ZL.id,
-                OverlayControl.BUTTON_ZR.id -> 0.20f  // 从 0.26f 增大到 0.4f
+                OverlayControl.BUTTON_ZR.id -> 0.26f
 
                 OverlayControl.BUTTON_STICK_L.id,
-                OverlayControl.BUTTON_STICK_R.id -> 0.10f  // 从 0.155f 增大到 0.3f
+                OverlayControl.BUTTON_STICK_R.id -> 0.155f
 
-                else -> 0.08f  // A/B/X/Y 等按钮从 0.11f 增大到 0.2f
+                else -> 0.11f
             }
             scale *= (IntSetting.OVERLAY_SCALE.getInt() + 50).toFloat()
             scale /= 100f
@@ -1322,7 +1319,7 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
             val res = context.resources
 
             // 增大 joystick 的默认大小，从 0.3f 改为 0.6f，让摇杆更容易看到和操作
-            var scale = 0.3f
+            var scale = 0.6f
             scale *= (IntSetting.OVERLAY_SCALE.getInt() + 50).toFloat()
             scale /= 100f
 
