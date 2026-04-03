@@ -16,6 +16,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
+import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.Icon
 import android.hardware.input.InputManager
@@ -184,7 +185,7 @@ class EmulationActivity : AppCompatActivity(), SensorEventListener, InputManager
         // Set these options now so that the SurfaceView the game renders into is the right size.
         enableFullscreenImmersive()
 
-        window.decorView.setBackgroundColor(getColor(android.R.color.black))
+        window.decorView.setBackgroundColor(Color.TRANSPARENT)
 
         nfcReader = NfcReader(this)
         nfcReader.initialize()
