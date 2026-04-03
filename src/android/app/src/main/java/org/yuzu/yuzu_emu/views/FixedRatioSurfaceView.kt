@@ -44,16 +44,10 @@ class FixedRatioSurfaceView @JvmOverloads constructor(
                 )
                 return
             } else {
-                // Max out height
-                val halfWidth = displayWidth / 2
-                val surfaceWidth = displayHeight * aspectRatio
-                val newLeft: Float = halfWidth - (surfaceWidth / 2)
-                val newRight: Float = halfWidth + (surfaceWidth / 2)
+                // Max out height - 修改为填满宽度，移除左右黑边
+                // 强制使用完整宽度，让游戏画面拉伸或裁剪以填满整个宽度
                 super.onMeasure(
-                    MeasureSpec.makeMeasureSpec(
-                        newRight.toInt() - newLeft.toInt(),
-                        MeasureSpec.EXACTLY
-                    ),
+                    widthMeasureSpec,
                     heightMeasureSpec
                 )
                 return
