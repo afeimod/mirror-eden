@@ -25,33 +25,34 @@ class FixedRatioSurfaceView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        // 从 MeasureSpec 中提取父容器提供的尺寸
-        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
-        val widthSize = MeasureSpec.getSize(widthMeasureSpec)
-        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
-        val heightSize = MeasureSpec.getSize(heightMeasureSpec)
-
-        if (aspectRatio == 0f) {
-            // 拉伸模式：aspectRatio 为 0f 时，填满整个父容器
-            // 不维护任何纵横比，让画面完全拉伸到全屏
-            setMeasuredDimension(widthSize, heightSize)
-        } else {
-            // 固定纵横比模式：根据指定的纵横比计算尺寸
-            val ratio = aspectRatio
-
-            // 计算基于宽度的情况
-            val widthBasedHeight = (widthSize / ratio).toInt()
-            // 计算基于高度的情况
-            val heightBasedWidth = (heightSize * ratio).toInt()
-
-            // 选择不会超出父容器范围的方案
-            val (finalWidth, finalHeight) = if (widthBasedHeight <= heightSize) {
-                widthSize to widthBasedHeight
+        val displayWidth: Float = MeasureSpec.getSize(widthMeasureSpec).toFloat()
+        val displayHeight: Float = MeasureSpec.getSize(heightMeasureSpec).toFloat()
+        if (aspectRatio != 0f) {
+            val displayAspect = displayWidth / displayHeight
+            if (displayAspect < aspectRatio) {
+                // Max out width
+                val halfHeight = displayHeight / 2
+                val surfaceHeight = displayWidth / aspectRatio
+                val newTop: Float = halfHeight - (surfaceHeight / 2)
+                val newBottom: Float = halfHeight + (surfaceHeight / 2)
+                super.onMeasure(
+                    widthMeasureSpec,
+                    MeasureSpec.makeMeasureSpec(
+                        newBottom.toInt() - newTop.toInt(),
+                        MeasureSpec.EXACTLY
+                    )
+                )
+                return
             } else {
-                heightBasedWidth to heightSize
+                // Max out height - 修改为填满宽度，移除左右黑边
+                // 强制使用完整宽度，让游戏画面拉伸或裁剪以填满整个宽度
+                super.onMeasure(
+                    widthMeasureSpec,
+                    heightMeasureSpec
+                )
+                return
             }
-
-            setMeasuredDimension(finalWidth, finalHeight)
         }
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 }
