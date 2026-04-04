@@ -69,9 +69,9 @@ object ScreenLayoutManager {
      */
     data class LayoutConfig(
         val enabled: Boolean = false,
-        val left: Int = 200,
+        val left: Int = 0,
         val top: Int = 0,
-        val right: Int = 200,
+        val right: Int = 0,
         val bottom: Int = 0
     ) {
         fun toLayoutMargins(): GameScreenLayoutManager.LayoutMargins {
@@ -83,7 +83,7 @@ object ScreenLayoutManager {
      * 预设布局
      */
     enum class Preset(val left: Int, val top: Int, val right: Int, val bottom: Int) {
-        DEFAULT(200, 0, 200, 0),
+        DEFAULT(0, 0, 0, 0),
         COMPACT_LEFT(100, 50, 0, 50),      // 左侧留白，适合横屏游戏
         COMPACT_RIGHT(0, 50, 100, 50),   // 右侧留白
         COMPACT_TOP(50, 100, 50, 0),      // 顶部留白
