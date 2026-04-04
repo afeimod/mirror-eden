@@ -1783,58 +1783,58 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
         }
     }
 
+    /**
+     * 修复后的 updateScreenLayout 方法：正确处理纵横比与垂直对齐的冲突
+     */
     private fun updateScreenLayout() {
         val b = _binding ?: return
-        val verticalAlignment =
-            EmulationVerticalAlignment.from(IntSetting.VERTICAL_ALIGNMENT.getInt())
+
+        // 如果用户正在使用自定义屏幕布局（通过边缘拖动调整），则跳过纵横比/对齐的自动设置
+        if (b.gameScreenLayoutManager.isAdjustModeEnabled) {
+            // 仍然需要刷新 Surface 和方向，但不改变布局参数
+            if (this::emulationState.isInitialized) {
+                emulationState.updateSurface()
+            }
+            emulationActivity?.buildPictureInPictureParams()
+            updateOrientation()
+            return
+        }
+
+        val verticalAlignment = EmulationVerticalAlignment.from(IntSetting.VERTICAL_ALIGNMENT.getInt())
+
+        // 解析纵横比：0 = 拉伸（null），1 = 16:9，2 = 4:3，3 = 21:9，4 = 16:10
         val aspectRatio = when (IntSetting.RENDERER_ASPECT_RATIO.getInt()) {
-            0 -> null // Stretch to window
+            0 -> null
             1 -> Rational(16, 9)
             2 -> Rational(4, 3)
             3 -> Rational(21, 9)
             4 -> Rational(16, 10)
-            else -> null // Default to stretch
+            else -> null
         }
-        when (verticalAlignment) {
-            EmulationVerticalAlignment.Top -> {
-                b.surfaceEmulation.setAspectRatio(aspectRatio)
-                val params = FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
-                params.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-                b.surfaceEmulation.layoutParams = params
-            }
 
-            EmulationVerticalAlignment.Center -> {
-                b.surfaceEmulation.setAspectRatio(aspectRatio)
-                b.surfaceEmulation.updateLayoutParams {
-                    width = ViewGroup.LayoutParams.MATCH_PARENT
-                    height = ViewGroup.LayoutParams.MATCH_PARENT
-                }
-            }
+        // 应用纵横比（由 GameSurfaceView 内部处理）
+        b.surfaceEmulation.setAspectRatio(aspectRatio)
 
-            EmulationVerticalAlignment.Bottom -> {
-                b.surfaceEmulation.setAspectRatio(aspectRatio)
-                val params =
-                    FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                params.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
-                b.surfaceEmulation.layoutParams = params
-            }
+        // 根据垂直对齐设置重力
+        val gravity = when (verticalAlignment) {
+            EmulationVerticalAlignment.Top    -> Gravity.TOP or Gravity.CENTER_HORIZONTAL
+            EmulationVerticalAlignment.Center -> Gravity.CENTER
+            EmulationVerticalAlignment.Bottom -> Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
         }
+        val params = b.surfaceEmulation.layoutParams as FrameLayout.LayoutParams
+        params.gravity = gravity
+        b.surfaceEmulation.layoutParams = params
+
+        // 通知 emulation 层 Surface 已更新（例如旋转后重新应用）
         if (this::emulationState.isInitialized) {
             emulationState.updateSurface()
         }
+
+        // 刷新画中画参数及屏幕方向
         emulationActivity?.buildPictureInPictureParams()
         updateOrientation()
     }
 
-    /**
-     * 加载并应用保存的屏幕布局设置
-     */
     private fun loadScreenLayoutSettings() {
         val b = _binding ?: return
         try {
