@@ -205,21 +205,6 @@
         <item>3</item>
     </integer-array>
 
-    <!-- Aspect Ratio Settings -->
-    <string-array name="aspectRatioNames">
-        <item>@string/aspect_ratio_stretch</item>
-        <item>@string/aspect_ratio_16_9</item>
-        <item>@string/aspect_ratio_4_3</item>
-        <item>@string/aspect_ratio_21_9</item>
-    </string-array>
-
-    <integer-array name="aspectRatioValues">
-        <item>0</item>  <!-- Stretch (default) -->
-        <item>1</item>  <!-- 16:9 -->
-        <item>2</item>  <!-- 4:3 -->
-        <item>3</item>  <!-- 21:9 -->
-    </integer-array>
-
     <string-array name="rendererScreenLayoutNames">
         <item>@string/screen_layout_auto</item>
         <item>@string/screen_layout_sensor_landscape</item>
@@ -238,6 +223,22 @@
         <item>6</item>
         <item>4</item>
         <item>3</item>
+    </integer-array>
+
+    <string-array name="rendererAspectRatioNames">
+        <item>@string/ratio_stretch</item>
+        <item>@string/ratio_default</item>
+        <item>@string/ratio_force_four_three</item>
+        <item>@string/ratio_force_twenty_one_nine</item>
+        <item>@string/ratio_force_sixteen_ten</item>
+    </string-array>
+
+    <integer-array name="rendererAspectRatioValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
     </integer-array>
 
     <string-array name="rendererScalingFilterNames">
