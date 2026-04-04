@@ -73,7 +73,7 @@
                 android:id="@+id/text_left_value"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:text="200dp"
+                android:text="0dp"
                 android:textAlignment="textEnd"
                 android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
 
@@ -141,7 +141,7 @@
                 android:id="@+id/text_right_value"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:text="200dp"
+                android:text="0dp"
                 android:textAlignment="textEnd"
                 android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
 
