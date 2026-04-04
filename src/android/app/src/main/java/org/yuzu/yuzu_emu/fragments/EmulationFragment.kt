@@ -1787,37 +1787,18 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
         val b = _binding ?: return
         val verticalAlignment =
             EmulationVerticalAlignment.from(IntSetting.VERTICAL_ALIGNMENT.getInt())
-        
-        // 读取纵横比设置：0=拉伸，1=16:9，2=4:3，3=21:9
-        val aspectRatioValue = IntSetting.RENDERER_ASPECT_RATIO.getInt()
-        
-        // 根据纵横比设置应用显示模式
-        when (aspectRatioValue) {
-            0 -> {
-                // 拉伸模式：填满整个父容器，不维护纵横比
-                b.surfaceEmulation.setAspectRatio(null)
-            }
-            1 -> {
-                // 16:9 模式
-                b.surfaceEmulation.setAspectRatio(Rational(16, 9))
-            }
-            2 -> {
-                // 4:3 模式
-                b.surfaceEmulation.setAspectRatio(Rational(4, 3))
-            }
-            3 -> {
-                // 21:9 模式
-                b.surfaceEmulation.setAspectRatio(Rational(21, 9))
-            }
-            else -> {
-                // 默认拉伸模式
-                b.surfaceEmulation.setAspectRatio(null)
-            }
+        val aspectRatio = when (IntSetting.RENDERER_ASPECT_RATIO.getInt()) {
+            0 -> null // Stretch to window
+            1 -> Rational(16, 9)
+            2 -> Rational(4, 3)
+            3 -> Rational(21, 9)
+            4 -> Rational(16, 10)
+            else -> null // Default to stretch
         }
-        
-        // 根据垂直对齐方式设置布局参数
         when (verticalAlignment) {
             EmulationVerticalAlignment.Top -> {
+                // 应用纵横比设置
+                b.surfaceEmulation.setAspectRatio(aspectRatio)
                 val params = FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
@@ -1827,6 +1808,7 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
             }
 
             EmulationVerticalAlignment.Center -> {
+                b.surfaceEmulation.setAspectRatio(aspectRatio)
                 b.surfaceEmulation.updateLayoutParams {
                     width = ViewGroup.LayoutParams.MATCH_PARENT
                     height = ViewGroup.LayoutParams.MATCH_PARENT
@@ -1834,6 +1816,8 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
             }
 
             EmulationVerticalAlignment.Bottom -> {
+                // 应用纵横比设置
+                b.surfaceEmulation.setAspectRatio(aspectRatio)
                 val params =
                     FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
@@ -1857,17 +1841,17 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
         val b = _binding ?: return
         try {
             val config = ScreenLayoutManager.loadLayoutConfig(requireContext())
-            // 始终应用布局设置，不管 enabled 状态
-            // 这样可以确保默认的 left=200, right=200 边距实时生效
-            b.gameScreenLayoutManager.loadLayoutConfig(
-                GameScreenLayoutManager.LayoutMargins(
-                    config.left,
-                    config.top,
-                    config.right,
-                    config.bottom
+            if (config.enabled) {
+                b.gameScreenLayoutManager.loadLayoutConfig(
+                    GameScreenLayoutManager.LayoutMargins(
+                        config.left,
+                        config.top,
+                        config.right,
+                        config.bottom
+                    )
                 )
-            )
-            b.gameScreenLayoutManager.isAdjustModeEnabled = config.enabled
+                b.gameScreenLayoutManager.isAdjustModeEnabled = true
+            }
         } catch (e: Exception) {
             // 忽略错误，使用默认设置
         }
