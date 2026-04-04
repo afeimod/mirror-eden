@@ -1797,7 +1797,6 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
         }
         when (verticalAlignment) {
             EmulationVerticalAlignment.Top -> {
-                // 应用纵横比设置
                 b.surfaceEmulation.setAspectRatio(aspectRatio)
                 val params = FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -1816,7 +1815,6 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
             }
 
             EmulationVerticalAlignment.Bottom -> {
-                // 应用纵横比设置
                 b.surfaceEmulation.setAspectRatio(aspectRatio)
                 val params =
                     FrameLayout.LayoutParams(
