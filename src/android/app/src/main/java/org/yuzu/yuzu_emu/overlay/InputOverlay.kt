@@ -845,21 +845,25 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
 
         when {
             button != null -> {
-                // 直接使用按钮的overlayControlData，移除不必要的空值检查
-                // 这样所有按钮都可以显示调整对话框，而不仅仅是joystick
-                scaleDialog =
-                    OverlayScaleDialog(context, button.overlayControlData) { newScale ->
-                        saveControlPosition(
-                            button.overlayControlData.id,
-                            button.bounds.centerX(),
-                            button.bounds.centerY(),
-                            individuaScale = newScale,
-                            layout
-                        )
-                        refreshControls()
-                    }
+                // 从NativeConfig重新获取overlayControlData，确保数据一致性
+                val overlayControlData = NativeConfig.getOverlayControlData()
+                val buttonData = overlayControlData.firstOrNull { it.id == button.overlayControlData.id }
+                
+                if (buttonData != null) {
+                    scaleDialog =
+                        OverlayScaleDialog(context, buttonData) { newScale ->
+                            saveControlPosition(
+                                buttonData.id,
+                                button.bounds.centerX(),
+                                button.bounds.centerY(),
+                                individuaScale = newScale,
+                                layout
+                            )
+                            refreshControls()
+                        }
 
-                scaleDialog?.showDialog(x,y, button.bounds.width(), button.bounds.height())
+                    scaleDialog?.showDialog(x,y, button.bounds.width(), button.bounds.height())
+                }
             }
 
             dpad != null -> {
