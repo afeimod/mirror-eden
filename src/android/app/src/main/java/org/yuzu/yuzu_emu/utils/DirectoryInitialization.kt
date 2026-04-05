@@ -24,6 +24,12 @@ object DirectoryInitialization {
         if (!areDirectoriesReady) {
             initializeInternalStorage()
             NativeConfig.initializeGlobalConfig()
+            
+            // 设置默认纵横比为拉伸窗口（Stretch = 枚举值4）
+            // 这会覆盖C++层的默认值R16_9
+            IntSetting.RENDERER_ASPECT_RATIO.setInt(4)
+            NativeConfig.saveGlobalConfig()
+            
             NativeLibrary.initializeSystem(false)
             NativeLibrary.reloadProfiles()
             migrateSettings()
