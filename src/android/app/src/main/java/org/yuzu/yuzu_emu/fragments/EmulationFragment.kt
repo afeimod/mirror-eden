@@ -1787,24 +1787,16 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback {
         val b = _binding ?: return
         val verticalAlignment =
             EmulationVerticalAlignment.from(IntSetting.VERTICAL_ALIGNMENT.getInt())
-        // 将UI索引映射到C++后端枚举索引
-        // UI数组顺序: [Stretch, 16:9, 4:3, 21:9, 16:10]
-        // C++枚举顺序: [R16_9, R4_3, R21_9, R16_10, Stretch] = [0, 1, 2, 3, 4]
-        val backendIndex = when (IntSetting.RENDERER_ASPECT_RATIO.getInt()) {
-            0 -> 4  // UI Stretch -> C++ Stretch
-            1 -> 0  // UI 16:9 -> C++ R16_9
-            2 -> 1  // UI 4:3 -> C++ R4_3
-            3 -> 2  // UI 21:9 -> C++ R21_9
-            4 -> 3  // UI 16:10 -> C++ R16_10
-            else -> 4  // 默认拉伸窗口
-        }
-        val aspectRatio = when (backendIndex) {
-            0 -> Rational(16, 9)  // R16_9
-            1 -> Rational(4, 3)   // R4_3
-            2 -> Rational(21, 9)  // R21_9
-            3 -> Rational(16, 10) // R16_10
-            4 -> null             // Stretch to window
-            else -> null
+        // C++层保存的是枚举索引: [R16_9=0, R4_3=1, R21_9=2, R16_10=3, Stretch=4]
+        // UI数组顺序: [Stretch=0, 16:9=1, 4:3=2, 21:9=3, 16:10=4]
+        // 枚举索引直接对应渲染时的纵横比
+        val aspectRatio = when (IntSetting.RENDERER_ASPECT_RATIO.getInt()) {
+            0 -> Rational(16, 9)  // C++枚举0: R16_9
+            1 -> Rational(4, 3)   // C++枚举1: R4_3
+            2 -> Rational(21, 9)  // C++枚举2: R21_9
+            3 -> Rational(16, 10) // C++枚举3: R16_10
+            4 -> null              // C++枚举4: Stretch to window
+            else -> Rational(16, 9) // 默认16:9
         }
         when (verticalAlignment) {
             EmulationVerticalAlignment.Top -> {
