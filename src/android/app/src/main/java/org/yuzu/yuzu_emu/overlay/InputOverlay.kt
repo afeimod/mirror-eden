@@ -1158,6 +1158,7 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
             // First try to load from ThemeManager (custom theme), then fallback to default resources
             val themeManager = ThemeManager.getInstance()
             val themeAssetName = BUTTON_THEME_MAP[overlayControlData.id]
+            val pressedThemeAssetName = BUTTON_PRESSED_THEME_MAP[overlayControlData.id]
             val themedDefaultBitmap = if (themeAssetName != null) {
                 val baseName = themeAssetName.removeSuffix(".png")
                 themeManager.getBitmap(context, "${baseName}_default.png")
@@ -1167,7 +1168,14 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
                 getBitmap(context, defaultResId, scale)
             }
 
-            val themedPressedBitmap = if (themeAssetName != null) {
+            // 尝试从pressed theme map加载按压状态的图片
+            val themedPressedBitmap = if (pressedThemeAssetName != null) {
+                val pressedBaseName = pressedThemeAssetName.removeSuffix(".png")
+                themeManager.getBitmap(context, pressedThemeAssetName)
+                    ?: themeManager.getBitmap(context, "${pressedBaseName}.png")
+                    ?: getBitmap(context, pressedResId, scale)
+            } else if (themeAssetName != null) {
+                // 兼容：尝试从普通theme asset名称加载pressed版本
                 val baseName = themeAssetName.removeSuffix(".png")
                 themeManager.getBitmap(context, "${baseName}_pressed.png")
                     ?: getBitmap(context, pressedResId, scale)
