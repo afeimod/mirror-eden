@@ -570,8 +570,26 @@ class EmulationActivity : AppCompatActivity(), SensorEventListener, InputManager
 
     private fun PictureInPictureParams.Builder.getPictureInPictureAspectBuilder():
         PictureInPictureParams.Builder {
-        // 强制拉伸模式，不设置固定宽高比，允许画面填充整个窗口
-        return this
+        // 将UI索引映射到C++后端枚举索引
+        // UI数组顺序: [Stretch, 16:9, 4:3, 21:9, 16:10]
+        // C++枚举顺序: [R16_9, R4_3, R21_9, R16_10, Stretch] = [0, 1, 2, 3, 4]
+        val backendIndex = when (IntSetting.RENDERER_ASPECT_RATIO.getInt()) {
+            0 -> 4  // UI Stretch -> C++ Stretch
+            1 -> 0  // UI 16:9 -> C++ R16_9
+            2 -> 1  // UI 4:3 -> C++ R4_3
+            3 -> 2  // UI 21:9 -> C++ R21_9
+            4 -> 3  // UI 16:10 -> C++ R16_10
+            else -> 4  // 默认拉伸窗口
+        }
+        val aspectRatio = when (backendIndex) {
+            0 -> Rational(16, 9)  // R16_9
+            1 -> Rational(4, 3)   // R4_3
+            2 -> Rational(21, 9)  // R21_9
+            3 -> Rational(16, 10) // R16_10
+            4 -> null             // Stretch to window - 不设置比例
+            else -> null
+        }
+        return this.apply { aspectRatio?.let { setAspectRatio(it) } }
     }
 
     private fun PictureInPictureParams.Builder.getPictureInPictureActionsBuilder():
