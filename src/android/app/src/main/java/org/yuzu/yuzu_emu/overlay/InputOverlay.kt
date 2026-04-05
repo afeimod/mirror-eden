@@ -814,6 +814,7 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
         data?.individualScale = individuaScale
 
         NativeConfig.setOverlayControlData(overlayControlData)
+        NativeConfig.saveGlobalConfig()
     }
 
     fun setIsInEditMode(editMode: Boolean) {
