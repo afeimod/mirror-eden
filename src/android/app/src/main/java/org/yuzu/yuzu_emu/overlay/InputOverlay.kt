@@ -400,7 +400,7 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
                             buttonBeingConfigured!!.overlayControlData.id,
                             buttonBeingConfigured!!.bounds.centerX(),
                             buttonBeingConfigured!!.bounds.centerY(),
-                            individuaScale = buttonBeingConfigured!!.overlayControlData.individualScale,
+                            individuaScale = buttonBeingConfigured!!.individualScale,
                             layout
                         )
                     }
@@ -1217,6 +1217,10 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
                 drawableY - (height / 2)
             )
             overlayDrawable.setOpacity(IntSetting.OVERLAY_OPACITY.getInt() * 255 / 100)
+            
+            // 设置按钮的individualScale
+            overlayDrawable.individualScale = overlayControlData.individualScale
+            
             return overlayDrawable
         }
 
@@ -1300,6 +1304,12 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
             // Need to set the image's position
             overlayDrawable.setPosition(drawableX - (width / 2), drawableY - (height / 2))
             overlayDrawable.setOpacity(IntSetting.OVERLAY_OPACITY.getInt() * 255 / 100)
+            
+            // 设置D-pad的individualScale
+            if (dpadData != null) {
+                overlayDrawable.individualScale = dpadData.individualScale
+            }
+            
             return overlayDrawable
         }
 
@@ -1424,6 +1434,10 @@ class InputOverlay(context: Context, attrs: AttributeSet?) :
             // Need to set the image's position
             overlayDrawable.setPosition(drawableX, drawableY)
             overlayDrawable.setOpacity(IntSetting.OVERLAY_OPACITY.getInt() * 255 / 100)
+            
+            // 设置Joystick的individualScale
+            overlayDrawable.individualScale = overlayControlData.individualScale
+            
             return overlayDrawable
         }
     }
