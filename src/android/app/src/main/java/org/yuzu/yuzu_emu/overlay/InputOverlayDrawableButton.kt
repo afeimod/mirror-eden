@@ -44,6 +44,9 @@ class InputOverlayDrawableButton(
     val width: Int
     val height: Int
 
+    // 添加individualScale属性，支持缩放调整
+    var individualScale: Float = 1.0f
+
     private val defaultStateBitmap: BitmapDrawable
     private val pressedStateBitmap: BitmapDrawable
     private var pressedState = false
